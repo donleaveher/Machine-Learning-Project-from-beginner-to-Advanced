@@ -53,11 +53,11 @@ def train_model_process(model, train_dataloader, val_dataloader, epochs):
     val_acc_all = []
 
 
-    for epoch in range(epochs):
+    for epoch in range(1,epochs+1):
 
         epoch_start_time = time.time()
 
-        print(f'The {epoch+1}/{epochs} Epoch')
+        print(f'The {epoch}/{epochs} Epoch')
         print("-"*10)
 
         train_loss = 0
@@ -121,8 +121,8 @@ def train_model_process(model, train_dataloader, val_dataloader, epochs):
 
 
 
-    model.load_state_dict(best_model_wts)
-    torch.save(model.load_state_dict(best_model_wts), 'LetNet/best_model.pth')
+    
+    torch.save(best_model_wts, 'LetNet/best_model.pth')
 
     train_process = pd.DataFrame(data={"epoch":range(epochs),
                                         "train_loss_all":train_loss_all,
@@ -155,6 +155,6 @@ if __name__  == "__main__":
     LeNet = LeNet()
     train_dataloader, val_dataloader = train_val_data_process()
 
-    train_process = train_model_process(LeNet, train_dataloader, val_dataloader, 100)
+    train_process = train_model_process(LeNet, train_dataloader, val_dataloader, 20)
 
     matplot_acc_loss(train_process)
