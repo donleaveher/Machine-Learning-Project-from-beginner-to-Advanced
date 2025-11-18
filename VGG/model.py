@@ -57,6 +57,15 @@ class VGG(nn.Module):
             nn.ReLU(),
             nn.Linear(4096,10)
         )
+
+        for m in self.modules():
+            if(isinstance(m, nn.Conv2d)):
+                nn.init.kaiming_normal_(m.weight, nonlinearity='relu')
+                if m.bias is not None:
+                    nn.init.constant_(m.bias, 0)
+            elif isinstance(m, nn.Linear):
+                nn.init.normal_(m.weight, 0, 0.01)
+
     def forward(self, x):
         x = self.b1(x)
         x = self.b2(x)

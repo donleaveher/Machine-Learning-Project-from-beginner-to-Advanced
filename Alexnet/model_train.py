@@ -11,7 +11,7 @@ from torchinfo import summary
 import copy
 import time
 import os # [Refactor 1] 导入 os 模块，用于创建文件夹
-
+import tqdm
 def train_val_data_process():
     
     # [Refactor 2] 为 FashionMNIST (1通道) 添加标准的均值和标准差
@@ -92,7 +92,8 @@ def train_model_process(model, train_dataloader, val_dataloader, epochs):
         train_acc = 0
         train_num = 0
 
-        for step, (b_x, b_y) in enumerate(train_dataloader):
+        train_var = tqdm(train_dataloader, desc = f"Train Epoch {epoch}")
+        for step, (b_x, b_y) in enumerate(train_var):
             # 将数据移动到设备
             b_x, b_y = b_x.to(device), b_y.to(device)
 
@@ -118,6 +119,7 @@ def train_model_process(model, train_dataloader, val_dataloader, epochs):
         val_num = 0
 
         with torch.no_grad(): # <-- [Refactor 7] 验证时关闭梯度计算，节省显存和时间
+            val_var = tqdm(val_dataloader, desc = f"Val Epoch {epoch}")
             for step, (b_x, b_y) in enumerate(val_dataloader):
                 # 将数据移动到设备
                 b_x, b_y = b_x.to(device), b_y.to(device)

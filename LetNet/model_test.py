@@ -59,3 +59,24 @@ if __name__ == "__main__":
     test_loader = test_val_data_process()
 
     test_model_process(model, test_loader)
+    if torch.backends.mps.is_available():
+        device = torch.device("mps")
+    elif torch.cuda.is_available():
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+
+    classes = ["T-shirt/top", 'Trouser', 'Pullover','Dress', 'Coat','Sandal','Shirt','Sneaker','Bag','Ankle boot']
+
+    with torch.no_grad():
+        for b_x, b_y in test_loader:
+            b_x = b_x.to(device)
+            b_y = b_y.to(device)
+
+            model.eval()
+            output = model(b_x)
+            pre_lab = torch.argmax(output, dim = 1)
+            result = pre_lab.item()
+            label = b_y.item()
+            if(result!=label):
+                print(f"Predict: {classes[result]}, Actual: {classes[label]}")
